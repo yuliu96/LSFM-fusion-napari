@@ -6,38 +6,16 @@ visibility: public
 categories: ["Annotation", "Segmentation", "Acquisition"]
 contributions:
   commands:
-    - id: LSFM-fusion-napari.write_multiple
-      python_name: lsfm_fusion_napari._writer:write_multiple
-      title: Save multi-layer data with LSFM Fusion
-    - id: LSFM-fusion-napari.write_single_image
-      python_name: lsfm_fusion_napari._writer:write_single_image
+    - id: LSFM-fusion-napari.write_tiff
+      python_name: lsfm_fusion_napari._writer:write_tiff
       title: Save image data with LSFM Fusion
-    - id: LSFM-fusion-napari.make_container_widget
-      python_name: lsfm_fusion_napari:ImageThreshold
-      title: Make threshold Container widget
-    - id: LSFM-fusion-napari.make_magic_widget
-      python_name: lsfm_fusion_napari:threshold_magic_widget
-      title: Make threshold magic widget
-    - id: LSFM-fusion-napari.make_function_widget
-      python_name: lsfm_fusion_napari:threshold_autogenerate_widget
-      title: Make threshold function widget
     - id: LSFM-fusion-napari.make_qwidget
-      python_name: lsfm_fusion_napari:ExampleQWidget
-      title: Make example QWidget
+      python_name: lsfm_fusion_napari:FusionWidget
+      title: Make Fusion Widget
   writers:
-    - command: LSFM-fusion-napari.write_multiple
-      layer_types: ['image*','labels*']
-      filename_extensions: []
-    - command: LSFM-fusion-napari.write_single_image
+    - command: LSFM-fusion-napari.write_tiff
       layer_types: ['image']
-      filename_extensions: ['.npy']
+      filename_extensions: ['.tiff']
   widgets:
-    - command: LSFM-fusion-napari.make_container_widget
-      display_name: Container Threshold
-    - command: LSFM-fusion-napari.make_magic_widget
-      display_name: Magic Threshold
-    - command: LSFM-fusion-napari.make_function_widget
-      autogenerate: true
-      display_name: Autogenerate Threshold
     - command: LSFM-fusion-napari.make_qwidget
-      display_name: Example QWidget
+      display_name: Fusion Widget
