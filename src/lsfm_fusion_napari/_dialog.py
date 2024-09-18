@@ -58,18 +58,18 @@ class GuidedDialog(QWidget):
         button_2.setMinimumWidth(50)
         button_4 = QPushButton("4")
         button_4.setMinimumWidth(50)
-        self.button_confirm_d1 = QPushButton("Confirm")
-        self.button_confirm_d2 = QPushButton("Confirm")
         self.button_confirm_v1 = QPushButton("Confirm")
-        self.button_apply_d2 = QPushButton("Apply")
-        self.button_apply_v1 = QPushButton("Apply")
+        self.button_confirm_v2 = QPushButton("Confirm")
+        self.button_confirm_d1 = QPushButton("Confirm")
         self.button_apply_v2 = QPushButton("Apply")
-        self.button_confirm_d1.setVisible(False)
-        self.button_confirm_d2.setVisible(False)
+        self.button_apply_d1 = QPushButton("Apply")
+        self.button_apply_d2 = QPushButton("Apply")
         self.button_confirm_v1.setVisible(False)
-        self.button_apply_d2.setVisible(False)
-        self.button_apply_v1.setVisible(False)
+        self.button_confirm_v2.setVisible(False)
+        self.button_confirm_d1.setVisible(False)
         self.button_apply_v2.setVisible(False)
+        self.button_apply_d1.setVisible(False)
+        self.button_apply_d2.setVisible(False)
         button_cancel = QPushButton("Cancel")
 
         # Button connections
@@ -77,12 +77,12 @@ class GuidedDialog(QWidget):
         button_detection.clicked.connect(self.det_on_click)
         button_2.clicked.connect(self.two_on_click)
         button_4.clicked.connect(self.four_on_click)
-        self.button_confirm_d1.clicked.connect(self.confirm_d1_on_click)
-        self.button_confirm_d2.clicked.connect(self.confirm_d2_on_click)
         self.button_confirm_v1.clicked.connect(self.confirm_v1_on_click)
-        self.button_apply_d2.clicked.connect(self.apply_d2_on_click)
-        self.button_apply_v1.clicked.connect(self.apply_v1_on_click)
+        self.button_confirm_v2.clicked.connect(self.confirm_v2_on_click)
+        self.button_confirm_d1.clicked.connect(self.confirm_d1_on_click)
         self.button_apply_v2.clicked.connect(self.apply_v2_on_click)
+        self.button_apply_d1.clicked.connect(self.apply_d1_on_click)
+        self.button_apply_d2.clicked.connect(self.apply_d2_on_click)
         button_cancel.clicked.connect(self.cancel_on_click)
 
         # Comboboxes
@@ -112,7 +112,7 @@ class GuidedDialog(QWidget):
         self.groupbox_amount.setLayout(gb_amount_layout)
         self.groupbox_amount.setVisible(False)
 
-        self.groupbox_image1 = QGroupBox("Dorsal image 1")
+        self.groupbox_image1 = QGroupBox("Ventral image 1")
         gb_img1_layout = QGridLayout()
         gb_img1_layout.addWidget(label_prompt_image1, 0, 0)
         gb_img1_layout.addWidget(self.combobox_image1, 0, 1)
@@ -121,7 +121,7 @@ class GuidedDialog(QWidget):
         self.groupbox_image1.setLayout(gb_img1_layout)
         self.groupbox_image1.setVisible(False)
 
-        self.groupbox_image2 = QGroupBox("Dorsal image 2")
+        self.groupbox_image2 = QGroupBox("Ventral image 2")
         gb_img2_layout = QGridLayout()
         gb_img2_layout.addWidget(label_prompt_image2, 0, 0)
         gb_img2_layout.addWidget(self.combobox_image2, 0, 1)
@@ -130,7 +130,7 @@ class GuidedDialog(QWidget):
         self.groupbox_image2.setLayout(gb_img2_layout)
         self.groupbox_image2.setVisible(False)
 
-        self.groupbox_image3 = QGroupBox("Ventral image 1")
+        self.groupbox_image3 = QGroupBox("Dorsal image 1")
         gb_img3_layout = QGridLayout()
         gb_img3_layout.addWidget(label_prompt_image3, 0, 0)
         gb_img3_layout.addWidget(self.combobox_image3, 0, 1)
@@ -140,7 +140,7 @@ class GuidedDialog(QWidget):
         self.groupbox_image3.setLayout(gb_img3_layout)
         self.groupbox_image3.setVisible(False)
 
-        self.groupbox_image4 = QGroupBox("Ventral image 2")
+        self.groupbox_image4 = QGroupBox("Dorsal image 2")
         gb_img4_layout = QGridLayout()
         gb_img4_layout.addWidget(label_prompt_image4, 0, 0)
         gb_img4_layout.addWidget(self.combobox_image4, 0, 1)
@@ -157,12 +157,12 @@ class GuidedDialog(QWidget):
         layout.addWidget(self.groupbox_image2, 3, 0, 1, -1)
         layout.addWidget(self.groupbox_image3, 4, 0, 1, -1)
         layout.addWidget(self.groupbox_image4, 5, 0, 1, -1)
-        layout.addWidget(self.button_confirm_d1, 6, 0)
-        layout.addWidget(self.button_confirm_d2, 6, 0)
         layout.addWidget(self.button_confirm_v1, 6, 0)
-        layout.addWidget(self.button_apply_d2, 6, 0)
-        layout.addWidget(self.button_apply_v1, 6, 0)
+        layout.addWidget(self.button_confirm_v2, 6, 0)
+        layout.addWidget(self.button_confirm_d1, 6, 0)
         layout.addWidget(self.button_apply_v2, 6, 0)
+        layout.addWidget(self.button_apply_d1, 6, 0)
+        layout.addWidget(self.button_apply_d2, 6, 0)
         layout.addWidget(button_cancel, 6, 1)
 
     def reset_ui(self):
@@ -172,12 +172,14 @@ class GuidedDialog(QWidget):
         self.groupbox_image2.setVisible(False)
         self.groupbox_image3.setVisible(False)
         self.groupbox_image4.setVisible(False)
-        self.button_confirm_d1.setVisible(False)
-        self.button_confirm_d2.setVisible(False)
         self.button_confirm_v1.setVisible(False)
-        self.button_apply_d2.setVisible(False)
-        self.button_apply_v1.setVisible(False)
+        self.button_confirm_v2.setVisible(False)
+        self.button_confirm_d1.setVisible(False)
         self.button_apply_v2.setVisible(False)
+        self.button_apply_d1.setVisible(False)
+        self.button_apply_d2.setVisible(False)
+        self.label_display_direction3.setVisible(False)
+        self.combobox_direction3.setVisible(False)
         self.adjustSize()
 
     def illu_on_click(self):
@@ -189,7 +191,7 @@ class GuidedDialog(QWidget):
         self.groupbox_type.setVisible(False)
         self.fill_layer_combobox(self.combobox_image1)
         self.groupbox_image1.setVisible(True)
-        self.button_confirm_d1.setVisible(True)
+        self.button_confirm_v1.setVisible(True)
         self.adjustSize()
 
     def det_on_click(self):
@@ -208,7 +210,7 @@ class GuidedDialog(QWidget):
         self.groupbox_amount.setVisible(False)
         self.fill_layer_combobox(self.combobox_image1)
         self.groupbox_image1.setVisible(True)
-        self.button_confirm_d1.setVisible(True)
+        self.button_confirm_v1.setVisible(True)
         self.label_display_direction3.setVisible(True)
         self.adjustSize()
 
@@ -221,17 +223,17 @@ class GuidedDialog(QWidget):
         self.groupbox_amount.setVisible(False)
         self.fill_layer_combobox(self.combobox_image1)
         self.groupbox_image1.setVisible(True)
-        self.button_confirm_d1.setVisible(True)
+        self.button_confirm_v1.setVisible(True)
         self.combobox_direction3.setVisible(True)
         self.adjustSize()
 
-    def confirm_d1_on_click(self):
+    def confirm_v1_on_click(self):
         # always called
-        self.parent.logger.debug("Confirm button d1 clicked")
+        self.parent.logger.debug("Confirm button v1 clicked")
         self.params["layer1"] = self.combobox_image1.currentText()
         self.params["direction1"] = self.combobox_direction1.currentText()
         self.groupbox_image1.setVisible(False)
-        self.button_confirm_d1.setVisible(False)
+        self.button_confirm_v1.setVisible(False)
         method = self.params["method"]
         amount = self.params["amount"]
         if method == "detection" and amount == 4:
@@ -239,62 +241,62 @@ class GuidedDialog(QWidget):
             self.set_direction_from_reference(self.label_display_direction2, self.params["direction1"])
             self.set_direction_from_reference(self.combobox_direction3, self.params["direction1"])
             self.groupbox_image2.setVisible(True)
-            self.button_confirm_d2.setVisible(True)
+            self.button_confirm_v2.setVisible(True)
         elif method == "illumination":
             self.fill_layer_combobox(self.combobox_image2)
             self.set_direction_from_reference(self.label_display_direction2, self.params["direction1"])
             self.groupbox_image2.setVisible(True)
-            self.button_apply_d2.setVisible(True)
+            self.button_apply_v2.setVisible(True)
         else:
             self.fill_layer_combobox(self.combobox_image3)
             self.set_direction_from_reference(self.label_display_direction3, self.params["direction1"])
             self.groupbox_image3.setVisible(True)
-            self.button_apply_v1.setVisible(True)
+            self.button_apply_d1.setVisible(True)
         self.adjustSize()
 
-    def confirm_d2_on_click(self):
+    def confirm_v2_on_click(self):
         # must be detection 4
-        self.parent.logger.debug("Confirm button d2 clicked")
+        self.parent.logger.debug("Confirm button v2 clicked")
         self.params["layer2"] = self.combobox_image2.currentText()
         self.params["direction2"] = self.label_display_direction2.text()
         self.groupbox_image2.setVisible(False)
-        self.button_confirm_d2.setVisible(False)
+        self.button_confirm_v2.setVisible(False)
         self.fill_layer_combobox(self.combobox_image3)
         self.set_direction_from_reference(self.label_display_direction3, self.params["direction2"])
         self.groupbox_image3.setVisible(True)
-        self.button_confirm_v1.setVisible(True)
+        self.button_confirm_d1.setVisible(True)
         self.adjustSize()
 
-    def confirm_v1_on_click(self):
+    def confirm_d1_on_click(self):
         # must be detection 4
-        self.parent.logger.debug("Confirm button v1 clicked")
+        self.parent.logger.debug("Confirm button d1 clicked")
         self.params["layer3"] = self.combobox_image3.currentText()
         self.params["direction3"] = self.label_display_direction3.text()
         self.groupbox_image3.setVisible(False)
-        self.button_confirm_v1.setVisible(False)
+        self.button_confirm_d1.setVisible(False)
         self.fill_layer_combobox(self.combobox_image4)
         self.set_direction_from_reference(self.label_display_direction4, self.params["direction3"])
         self.groupbox_image4.setVisible(True)
-        self.button_apply_v2.setVisible(True)
+        self.button_apply_d2.setVisible(True)
         self.adjustSize()
 
-    def apply_d2_on_click(self):
+    def apply_v2_on_click(self):
         # must be illumination
-        self.parent.logger.debug("Apply button d2 clicked")
+        self.parent.logger.debug("Apply button v2 clicked")
         self.params["layer2"] = self.combobox_image2.currentText()
         self.params["direction2"] = self.label_display_direction2.text()
         self.pass_input()
 
-    def apply_v1_on_click(self):
+    def apply_d1_on_click(self):
         # must be detection 2
-        self.parent.logger.debug("Apply button v1 clicked")
+        self.parent.logger.debug("Apply button d1 clicked")
         self.params["layer3"] = self.combobox_image3.currentText()
         self.params["direction3"] = self.label_display_direction3.text()
         self.pass_input()
 
-    def apply_v2_on_click(self):
+    def apply_d2_on_click(self):
         # must be detection 4
-        self.parent.logger.debug("Apply button v2 clicked")
+        self.parent.logger.debug("Apply button d2 clicked")
         self.params["layer4"] = self.combobox_image4.currentText()
         self.params["direction4"] = self.label_display_direction4.text()
         self.pass_input()
