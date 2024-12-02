@@ -37,10 +37,10 @@ class GuidedDialog(QWidget):
         # Labels
         label_prompt_type = QLabel("Select the type of fusion:")
         label_prompt_amount = QLabel("Select the amount of images to fuse:")
-        label_prompt_image1 = QLabel("Select the first dorsal image:")
-        label_prompt_image2 = QLabel("Select the second dorsal image:")
-        label_prompt_image3 = QLabel("Select the first ventral image:")
-        label_prompt_image4 = QLabel("Select the second ventral image:")
+        label_prompt_image1 = QLabel("Select the first back camera image:")
+        label_prompt_image2 = QLabel("Select the second back camera image:")
+        label_prompt_image3 = QLabel("Select the first front camera image:")
+        label_prompt_image4 = QLabel("Select the second front camera image:")
         label_direction1 = QLabel("Direction:")
         label_direction2 = QLabel("Direction:")
         label_direction3 = QLabel("Direction:")
@@ -49,7 +49,7 @@ class GuidedDialog(QWidget):
         self.label_display_direction2 = QLabel("Up")
         self.label_display_direction3 = QLabel("Down")
         self.label_display_direction3.setVisible(False)
-        self.label_display_direction4 = QLabel("Girl")
+        self.label_display_direction4 = QLabel("")
 
         # Buttons
         button_illumination = QPushButton("Illumination")
@@ -112,7 +112,7 @@ class GuidedDialog(QWidget):
         self.groupbox_amount.setLayout(gb_amount_layout)
         self.groupbox_amount.setVisible(False)
 
-        self.groupbox_image1 = QGroupBox("Ventral image 1")
+        self.groupbox_image1 = QGroupBox("Front camera image 1")
         gb_img1_layout = QGridLayout()
         gb_img1_layout.addWidget(label_prompt_image1, 0, 0)
         gb_img1_layout.addWidget(self.combobox_image1, 0, 1)
@@ -121,7 +121,7 @@ class GuidedDialog(QWidget):
         self.groupbox_image1.setLayout(gb_img1_layout)
         self.groupbox_image1.setVisible(False)
 
-        self.groupbox_image2 = QGroupBox("Ventral image 2")
+        self.groupbox_image2 = QGroupBox("Front camera image 2")
         gb_img2_layout = QGridLayout()
         gb_img2_layout.addWidget(label_prompt_image2, 0, 0)
         gb_img2_layout.addWidget(self.combobox_image2, 0, 1)
@@ -130,7 +130,7 @@ class GuidedDialog(QWidget):
         self.groupbox_image2.setLayout(gb_img2_layout)
         self.groupbox_image2.setVisible(False)
 
-        self.groupbox_image3 = QGroupBox("Dorsal image 1")
+        self.groupbox_image3 = QGroupBox("Back camera image 1")
         gb_img3_layout = QGridLayout()
         gb_img3_layout.addWidget(label_prompt_image3, 0, 0)
         gb_img3_layout.addWidget(self.combobox_image3, 0, 1)
@@ -140,7 +140,7 @@ class GuidedDialog(QWidget):
         self.groupbox_image3.setLayout(gb_img3_layout)
         self.groupbox_image3.setVisible(False)
 
-        self.groupbox_image4 = QGroupBox("Dorsal image 2")
+        self.groupbox_image4 = QGroupBox("Back camera image 2")
         gb_img4_layout = QGridLayout()
         gb_img4_layout.addWidget(label_prompt_image4, 0, 0)
         gb_img4_layout.addWidget(self.combobox_image4, 0, 1)
