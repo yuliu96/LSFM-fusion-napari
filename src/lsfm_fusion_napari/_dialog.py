@@ -128,7 +128,7 @@ class GuidedDialog(QWidget):
         self.groupbox_amount.setLayout(gb_amount_layout)
         self.groupbox_amount.setVisible(False)
 
-        self.groupbox_image1 = QGroupBox("Front camera image 1")
+        self.groupbox_image1 = QGroupBox("Image 1 (camera front)")
         gb_img1_layout = QGridLayout()
         gb_img1_layout.addWidget(label_prompt_image1, 0, 0)
         gb_img1_layout.addWidget(self.combobox_image1, 0, 1)
@@ -137,7 +137,7 @@ class GuidedDialog(QWidget):
         self.groupbox_image1.setLayout(gb_img1_layout)
         self.groupbox_image1.setVisible(False)
 
-        self.groupbox_image2 = QGroupBox("Front camera image 2")
+        self.groupbox_image2 = QGroupBox("Image 2 (camera front)")
         gb_img2_layout = QGridLayout()
         gb_img2_layout.addWidget(label_prompt_image2, 0, 0)
         gb_img2_layout.addWidget(self.combobox_image2, 0, 1)
@@ -146,7 +146,7 @@ class GuidedDialog(QWidget):
         self.groupbox_image2.setLayout(gb_img2_layout)
         self.groupbox_image2.setVisible(False)
 
-        self.groupbox_image3 = QGroupBox("Back camera image 1")
+        self.groupbox_image3 = QGroupBox("Image 1 (camera back)")
         gb_img3_layout = QGridLayout()
         gb_img3_layout.addWidget(label_prompt_image3, 0, 0)
         gb_img3_layout.addWidget(self.combobox_image3, 0, 1)
@@ -156,7 +156,7 @@ class GuidedDialog(QWidget):
         self.groupbox_image3.setLayout(gb_img3_layout)
         self.groupbox_image3.setVisible(False)
 
-        self.groupbox_image4 = QGroupBox("Back camera image 2")
+        self.groupbox_image4 = QGroupBox("Image 2 (camera back)")
         gb_img4_layout = QGridLayout()
         gb_img4_layout.addWidget(label_prompt_image4, 0, 0)
         gb_img4_layout.addWidget(self.combobox_image4, 0, 1)
