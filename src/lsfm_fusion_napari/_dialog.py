@@ -9,6 +9,26 @@ from qtpy.QtWidgets import (
 )
 import napari
 
+import napari
+from napari.qt import get_stylesheet
+from napari.settings import get_settings
+
+
+# The magicgui widget shown by selecting the 'Show widget' button of MyWidget
+@magicgui
+def sample_add(a: int, b: int) -> int:
+    return a + b
+
+
+def change_style():
+    sample_add.native.setStyleSheet(
+        get_stylesheet(get_settings().appearance.theme)
+    )
+
+
+get_settings().appearance.events.theme.connect(change_style)
+change_style()
+
 
 class GuidedDialog(QWidget):
     def __init__(self, parent=None):
