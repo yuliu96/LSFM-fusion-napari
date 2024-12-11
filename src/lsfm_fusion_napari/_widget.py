@@ -117,6 +117,7 @@ class FusionWidget(QWidget):
         self.viewer = viewer
         self.logger: logging.Logger
         self._initialize_logger()
+        self.layer_names = "fusion_widget"
 
         self.logger.debug("Initializing FusionWidget")
 
