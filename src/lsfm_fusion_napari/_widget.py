@@ -16,6 +16,8 @@ from qtpy.QtWidgets import (
     QScrollArea,
     QDialog,
     QFileDialog,
+    QSizePolicy,
+    QSlider,
 )
 from qtpy.QtCore import Qt
 
@@ -24,6 +26,87 @@ from FUSE import FUSE_illu, FUSE_det
 
 from ._dialog import GuidedDialog
 from ._writer import save_dialog, write_tiff
+import numpy as np
+
+
+class IntensityNormalization(QGroupBox):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setTitle("Intensity normalization")
+        self.setVisible(False)
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        self.setStyleSheet(
+            "QGroupBox {background-color: blue; " "border-radius: 10px}"
+        )
+        self.viewer = parent.viewer
+        self.parent = parent
+        self.name = ""  # layer.name
+        self.lower_percentage = 0.0
+        self.upper_percentage = 95.0
+
+        # layout and parameters for intensity normalization
+        vbox = QVBoxLayout()
+        self.setLayout(vbox)
+
+        vbox.addWidget(QLabel("image"))
+        self.cbx_image = QComboBox()
+        self.cbx_image.addItems(parent.layer_names)
+        self.cbx_image.currentIndexChanged.connect(self.image_changed)
+        vbox.addWidget(self.cbx_image)
+
+        self.lbl_lower_percentage = QLabel("lower percentage: 0.00")
+        vbox.addWidget(self.lbl_lower_percentage)
+        sld_lower_percentage = QSlider(Qt.Horizontal)
+        sld_lower_percentage.setRange(0, 500)
+        sld_lower_percentage.valueChanged.connect(self.lower_changed)
+        vbox.addWidget(sld_lower_percentage)
+
+        self.lbl_upper_percentage = QLabel("Upper percentage: 95.00")
+        vbox.addWidget(self.lbl_upper_percentage)
+        sld_upper_percentage = QSlider(Qt.Horizontal)
+        sld_upper_percentage.setRange(9500, 10000)
+        sld_upper_percentage.valueChanged.connect(self.upper_changed)
+        vbox.addWidget(sld_upper_percentage)
+
+        btn_run = QPushButton("run")
+        btn_run.clicked.connect(self.run_intensity_normalization)
+        vbox.addWidget(btn_run)
+
+    def image_changed(self, index: int):
+        # (19.11.2024)
+        self.name = self.parent.layer_names[index]
+
+    def lower_changed(self, value: int):
+        # (19.11.2024)
+        self.lower_percentage = float(value) / 100.0
+        self.lbl_lower_percentage.setText(
+            "lower percentage: %.2f" % (self.lower_percentage)
+        )
+
+    def upper_changed(self, value: int):
+        # (19.11.2024)
+        self.upper_percentage = float(value) / 100.0
+        self.lbl_upper_percentage.setText(
+            "upper percentage: %.2f" % (self.upper_percentage)
+        )
+
+    def run_intensity_normalization(self):
+        # (22.11.2024)
+        if self.name == "":
+            self.image_changed(0)
+
+        if any(layer.name == self.name for layer in self.viewer.layers):
+            layer = self.viewer.layers[self.name]
+            input_image = layer.data
+        else:
+            print("Error: The image %s don't exist!" % (self.name))
+            return
+
+        lower_v = np.percentile(input_image, self.lower_percentage)
+        upper_v = np.percentile(input_image, self.upper_percentage)
+        img = np.clip(input_image, lower_v, upper_v)
+        output = (img - lower_v) / (upper_v - lower_v)
+        self.viewer.add_image(output, name=self.name)
 
 
 class FusionWidget(QWidget):
@@ -75,12 +158,18 @@ class FusionWidget(QWidget):
                 self, func, event
             )
 
-        self.viewer.layers.events.removed.connect(self._mark_invalid_layer_label)
+        self.viewer.layers.events.removed.connect(
+            self._mark_invalid_layer_label
+        )
+
         def connect_rename(event):
             event.value.events.name.connect(self._update_layer_label)
+
         self.viewer.layers.events.inserted.connect(connect_rename)
+
         def write_old_name_to_metadata(event):
             event.value.metadata["old_name"] = event.value.name
+
         self.viewer.layers.events.inserted.connect(write_old_name_to_metadata)
         for layer in self.viewer.layers:
             layer.metadata["old_name"] = layer.name
@@ -122,7 +211,7 @@ class FusionWidget(QWidget):
         self.label_illumination2 = QLabel("illumination 2:")
         self.label_illumination3 = QLabel("illumination 3:")
         self.label_illumination4 = QLabel("illumination 4:")
-        self.label_illu1 = QLabel() # TODO: handle long layer names
+        self.label_illu1 = QLabel()  # TODO: handle long layer names
         self.label_illu2 = QLabel()
         self.label_illu3 = QLabel()
         self.label_illu4 = QLabel()
@@ -238,6 +327,10 @@ class FusionWidget(QWidget):
         parameters_layout.addWidget(self.checkbox_keep_tmp, 9, 2)
         parameters.setLayout(parameters_layout)
 
+        vadvanced_parameter = QVBoxLayout()
+        self.intensity_normalization = IntensityNormalization(self)
+        vadvanced_parameter.addWidget(self.intensity_normalization)
+
         ### Layout
         layout = QGridLayout()
         layout.addWidget(title, 0, 0, 1, -1)
@@ -275,7 +368,9 @@ class FusionWidget(QWidget):
         for label in labels:
             if label.text() == old_name:
                 label.setText(new_name)
-                self.logger.debug(f"Layer name updated: {old_name} -> {new_name}")
+                self.logger.debug(
+                    f"Layer name updated: {old_name} -> {new_name}"
+                )
                 break
 
     def _mark_invalid_layer_label(self, event):
@@ -328,7 +423,7 @@ class FusionWidget(QWidget):
         self.label_illu2.setStyleSheet("")
         self.label_illu3.setStyleSheet("")
         self.label_illu4.setStyleSheet("")
-        
+
         self.label_illu1.setText(params["layer1"])
         self.label_selected_direction1.setText(params["direction1"])
 
@@ -340,21 +435,21 @@ class FusionWidget(QWidget):
             self._set_input_visible(3, True)
             if params["amount"] == 2:
                 # detection with 2 images
-                self._set_input_visible([2,4], False)
+                self._set_input_visible([2, 4], False)
             else:
                 # detection with 4 images
                 self.label_illu2.setText(params["layer2"])
                 self.label_selected_direction2.setText(params["direction2"])
                 self.label_illu4.setText(params["layer4"])
                 self.label_selected_direction4.setText(params["direction4"])
-                self._set_input_visible([2,4], True)
+                self._set_input_visible([2, 4], True)
         else:
             # illumination (2 images)
             self.amount.setVisible(False)
             self.label_illu2.setText(params["layer2"])
             self.label_selected_direction2.setText(params["direction2"])
             self._set_input_visible(2, True)
-            self._set_input_visible([3,4], False)
+            self._set_input_visible([3, 4], False)
 
         self.image_config_is_valid = True
         self.input_box.setVisible(True)
@@ -397,29 +492,31 @@ class FusionWidget(QWidget):
         params = self._get_parameters()
         if params is None:
             return
-        exclude_keys = {'image1', 'image2', 'image3', 'image4'}
+        exclude_keys = {"image1", "image2", "image3", "image4"}
 
-        filtered_dict = {k: v for k, v in params.items() if k not in exclude_keys}
+        filtered_dict = {
+            k: v for k, v in params.items() if k not in exclude_keys
+        }
         self.logger.debug(filtered_dict)
-        
+
         if params["method"] == "illumination":
             model = FUSE_illu()
         else:
             model = FUSE_det()
 
         output_image = model.train_from_params(params)
-        self.viewer.add_image(output_image) # set name of layer
+        self.viewer.add_image(output_image)  # set name of layer
 
     def _get_parameters(self):
         self.logger.debug("Compiling parameters")
         if not self.input_box.isVisible():
             self.logger.error("Input not set")
             return None
-        
+
         if not self.image_config_is_valid:
             self.logger.error("Invalid image configuration")
             return None
-        
+
         params = {}
 
         method = self.method.text()
